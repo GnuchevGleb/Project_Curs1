@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "pythonproject2"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.32.3"
+pandas = "^2.2.3"
+openpyxl = "^3.1.5"
+
+[tool.poetry.group.lint.dependencies]
+flake8 = "^7.1.1"
+isort = "^5.13.2"
+black = "^24.10.0"
+mypy = "^1.14.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest-cov = "^6.0.0"
+
+[tool.isort]
+# максимальная длина строки
+line_length = 119
+
+[tool.black]
+# Максимальная длина строки
+line-length = 119
+# Файлы, которые не нужно форматировать
+exclude = '''
+(
+  /(
+      \.eggs         # Исключить несколько общих каталогов
+    | \.git          # в корне проекта
+    | \.venv
+  )/
+)
+'''
+[tool.mypy]
+disallow_untyped_defs = true
+warn_return_any = true
+exclude = 'venv'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
