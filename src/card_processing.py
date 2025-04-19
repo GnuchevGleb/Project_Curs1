@@ -1,63 +1,20 @@
 import logging
-import os
+
 from collections import Counter
-import pandas as pd
 from pandas.core.interchange.dataframe_protocol import DataFrame
 
 
-def read_file() -> DataFrame:
-    """функция считывает файл с транзакциями, удаляет строки с пустыми значениями
-    и ошибочными данными в банковских картах"""
-
-    logger = logging.getLogger("sort_list.py")
-    file_handler = logging.FileHandler("../logs/read_file", "w")
-    file_formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s: %(message)s")
-    file_handler.setFormatter(file_formatter)
-    logger.addHandler(file_handler)
-    logger.setLevel(logging.DEBUG)
-
-    """определяем путь к файлу с транзакциями"""
-    logger.info("начало выполнения функции read_file")
-    current_dir = os.path.dirname(__file__)
-    data_dir = os.path.join(current_dir, "..", "data")
-
-    way_ex = os.path.join(data_dir, "operations.xls")
-    logger.info("путь к файлу с данными")
-    logger.info(way_ex)
-
-    if os.path.exists(way_ex):
-        logger.info("Path exists")
-    else:
-        logger.info("Path does not exist")
-
-    text = pd.read_excel(way_ex)
-    logger.info("считывание файла в переменную text")
-
-    texts = text.loc[:, ["Дата платежа", "Номер карты", "Статус", "Сумма операции", "Категория", "Описание"]]
-
-    texts = texts.dropna()  # удаляем строки с пустыми значениями
-    mask = texts["Номер карты"].str.contains(r"^\*\d+$", na=False)  # удаляем не корректные данные номеров карт
-    texts = texts[mask]
-    texts = texts.reset_index(level=None, drop=True, inplace=False, col_level=0, col_fill="")
-
-    return texts
-
-
-# print(read_file())
-############################################################################################################
-
-
-def card_operations() -> list or DataFrame:
+def card_operations(texts) -> list or DataFrame:
     """функция считывает файл с транзакциями и выдаёт номера банковских карт, сумму операций и кэшбэк"""
 
     logger = logging.getLogger("sort_list.py")
-    file_handler = logging.FileHandler("../logs/card_operations", "w")
+    file_handler = logging.FileHandler("../logs/card_operations.log", "w")
     file_formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s: %(message)s")
     file_handler.setFormatter(file_formatter)
     logger.addHandler(file_handler)
     logger.setLevel(logging.DEBUG)
 
-    texts = read_file()
+    # texts = read_file()
     logger.info(texts.head())
 
     card_numbers = Counter(texts["Номер карты"])
@@ -74,7 +31,7 @@ def card_operations() -> list or DataFrame:
     logger.info("номера карт в транзакции")
     logger.info(card_numbers_lict)
 
-    dict_cart_cum_nn = {}
+    # dict_cart_cum_nn = {}
     result = []
 
     for j in card_numbers_lict:
@@ -98,11 +55,11 @@ def card_operations() -> list or DataFrame:
 ###################################################################################################
 
 
-def top_transactions() -> list:
+def top_transactions(texts) -> list:
     """Функция находит Топ-5 транзакций по сумме платежа"""
 
     logger = logging.getLogger("sort_list.py")
-    file_handler = logging.FileHandler("../logs/top_transactions", "w")
+    file_handler = logging.FileHandler("../logs/top_transactions.log", "w")
     file_formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s: %(message)s")
     file_handler.setFormatter(file_formatter)
     logger.addHandler(file_handler)
@@ -111,8 +68,7 @@ def top_transactions() -> list:
     top_dict = {}
     logger.info("начало выполнения функции top_transactions")
 
-    texts = read_file()
-    logger.info(texts.head())
+    logger.info(texts)
 
     # print((texts.sort_values(by = 'Сумма операции')))
     logger.info(texts.sort_values(by="Сумма операции"))
@@ -122,7 +78,7 @@ def top_transactions() -> list:
 
         if i <= 4:
 
-            top_dict["date"] = row["Дата платежа"]
+            top_dict["date"] = row["Дата операции"]
             top_dict["amount"] = str(abs(row["Сумма операции"]))
 
             top_dict["category"] = row["Категория"]
@@ -137,4 +93,4 @@ def top_transactions() -> list:
 
 
 # print(top_transactions())
-##############################################################################################
+# ##############################################################################################

@@ -167,5 +167,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 may test/
+logs/
 # PyPI configuration file
 .pypirc
+example.txt
+my_report.json
