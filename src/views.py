@@ -33,5 +33,5 @@ def web_pages(date: str) -> dict:
         "currency_rates": currency_exchange(),
         "stock_prices": praise_read(),
     }
-    print("#######################################################################################################")
+
     return web_pages_dikt

@@ -109,7 +109,6 @@ def stock_prices():
     with open("example.txt", "w") as file:
         file.write(data)
 
-
 # print(stock_prices())
 
 
@@ -160,6 +159,5 @@ def praise_read() -> list:
                 stock_prices.append((df_f[["stock", "price"]]).to_dict(orient="records")[0])
 
     return stock_prices
-
 
 # print(praise_read())
